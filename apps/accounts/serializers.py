@@ -9,8 +9,8 @@ class UserPublicSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'nama_lengkap', 'nim', 'kelas', 'role', 'role_display',
-                  'is_exam_locked', 'lock_reason']
+        fields = ['id', 'username', 'nama_lengkap', 'nim', 'nip', 'kelas', 'role',
+                  'role_display', 'is_exam_locked', 'lock_reason']
         read_only_fields = ['id', 'role_display', 'is_exam_locked', 'lock_reason']
 
 
@@ -25,7 +25,16 @@ class ImportMahasiswaSerializer(serializers.Serializer):
     file_excel = serializers.FileField()
 
 
+class DosenListSerializer(serializers.ModelSerializer):
+    """Serializer khusus untuk menampilkan data dosen."""
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'nama_lengkap', 'nip', 'is_active', 'date_joined']
+        read_only_fields = fields
+
+
 class MahasiswaListSerializer(serializers.ModelSerializer):
+    """Serializer khusus untuk menampilkan data mahasiswa."""
     class Meta:
         model = User
         fields = ['id', 'nama_lengkap', 'nim', 'kelas', 'is_exam_locked', 'lock_reason',

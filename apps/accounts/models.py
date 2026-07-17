@@ -28,8 +28,16 @@ class User(AbstractUser):
     nim = models.CharField(
         max_length=50,
         blank=True,
-        unique=False,  # Bisa kosong untuk dosen
+        unique=False,  # Khusus mahasiswa
         verbose_name='NIM',
+        help_text='Nomor Induk Mahasiswa. Diisi hanya untuk mahasiswa.',
+    )
+    nip = models.CharField(
+        max_length=50,
+        blank=True,
+        unique=False,  # Khusus dosen
+        verbose_name='NIP',
+        help_text='Nomor Induk Pegawai. Diisi hanya untuk dosen.',
     )
     kelas = models.CharField(
         max_length=50,
@@ -68,7 +76,7 @@ class User(AbstractUser):
     def __str__(self):
         if self.role == self.ROLE_MAHASISWA:
             return f"{self.nama_lengkap} ({self.nim}) - {self.kelas}"
-        return f"{self.nama_lengkap} (Dosen)"
+        return f"{self.nama_lengkap} - NIP: {self.nip or 'belum diisi'} (Dosen)"
 
     @property
     def is_dosen(self):

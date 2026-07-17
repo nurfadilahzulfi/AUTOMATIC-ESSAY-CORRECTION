@@ -21,7 +21,7 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 
 from .models import User
-from .serializers import UserPublicSerializer, MahasiswaListSerializer
+from .serializers import UserPublicSerializer, MahasiswaListSerializer, DosenListSerializer
 
 
 def _generate_password(length=6):
@@ -29,9 +29,6 @@ def _generate_password(length=6):
     return ''.join(random.choices(chars, k=length))
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# AUTH ENDPOINTS
-# ─────────────────────────────────────────────────────────────────────────────
 
 class LoginView(APIView):
     """
@@ -51,10 +48,18 @@ class LoginView(APIView):
         # Coba authenticate langsung
         user = authenticate(request, username=username, password=password)
 
-        # Jika gagal, coba cari berdasarkan NIM (untuk mahasiswa)
+        # Jika gagal, coba cari berdasarkan NIM (mahasiswa)
         if user is None:
             try:
                 u = User.objects.get(nim=username, role=User.ROLE_MAHASISWA)
+                user = authenticate(request, username=u.username, password=password)
+            except User.DoesNotExist:
+                pass
+
+        # Jika masih gagal, coba cari berdasarkan NIP (dosen)
+        if user is None:
+            try:
+                u = User.objects.get(nip=username, role=User.ROLE_DOSEN)
                 user = authenticate(request, username=u.username, password=password)
             except User.DoesNotExist:
                 pass
@@ -70,6 +75,20 @@ class LoginView(APIView):
 
         if not user.is_active:
             return Response({'detail': 'Akun tidak aktif.'}, status=403)
+
+        # ── SINGLE-DEVICE ENFORCEMENT ──────────────────────────────────────
+        # Blacklist semua refresh token lama milik user ini.
+        # Perangkat lain yang sedang login akan otomatis ter-logout
+        # saat access token mereka expired (maks 4 jam).
+        try:
+            from rest_framework_simplejwt.token_blacklist.models import (
+                OutstandingToken, BlacklistedToken
+            )
+            outstanding_tokens = OutstandingToken.objects.filter(user=user)
+            for token in outstanding_tokens:
+                BlacklistedToken.objects.get_or_create(token=token)
+        except Exception:
+            pass  
 
         refresh = RefreshToken.for_user(user)
         return Response({
@@ -101,9 +120,6 @@ class ProfileView(APIView):
         return Response(UserPublicSerializer(request.user).data)
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# MANAJEMEN MAHASISWA (dosen only)
-# ─────────────────────────────────────────────────────────────────────────────
 
 class MahasiswaListView(APIView):
     """GET /api/v1/auth/mahasiswa/ — Daftar semua mahasiswa."""

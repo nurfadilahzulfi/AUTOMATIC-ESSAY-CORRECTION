@@ -4,6 +4,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework_simplejwt.views import TokenRefreshView
 
+def _superuser_only(self, request):
+    return request.user.is_active and request.user.is_superuser
+
+admin.site.__class__.has_permission = _superuser_only
+
 urlpatterns = [
     path('admin/', admin.site.urls),
 
