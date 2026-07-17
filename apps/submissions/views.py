@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from apps.exams.models import Ujian
 from .models import SesiUjian, Jawaban
-from .serializers import SesiUjianSerializer, SaveJawabanSerializer
+from .serializers import SesiUjianSerializer
 
 
 class MulaiUjianView(APIView):
