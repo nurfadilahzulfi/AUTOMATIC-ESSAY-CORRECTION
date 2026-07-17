@@ -3,20 +3,20 @@ from django.conf import settings
 
 
 class MataPelajaran(models.Model):
-    """Mata pelajaran/kuliah yang diajar oleh dosen."""
-    nama = models.CharField(max_length=200, verbose_name='Nama Mata Pelajaran')
-    kode = models.CharField(max_length=20, unique=True, verbose_name='Kode Mata Pelajaran')
+    """Mata kuliah yang diajar oleh dosen."""
+    nama = models.CharField(max_length=200, verbose_name='Nama Mata Kuliah')
+    kode = models.CharField(max_length=20, unique=True, verbose_name='Kode Mata Kuliah')
     dosen = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='mata_pelajaran',
+        related_name='mata_kuliah',
         verbose_name='Dosen Pengampu',
     )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = 'Mata Pelajaran'
-        verbose_name_plural = 'Daftar Mata Pelajaran'
+        verbose_name = 'Mata Kuliah'
+        verbose_name_plural = 'Daftar Mata Kuliah'
         ordering = ['nama']
 
     def __str__(self):

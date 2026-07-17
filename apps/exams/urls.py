@@ -16,9 +16,9 @@ urlpatterns = [
     # Ujian tersedia untuk mahasiswa
     path('tersedia/', UjianTersediaView.as_view(), name='ujian_tersedia'),
 
-    # Mata pelajaran
-    path('mata-pelajaran/', MataPelajaranListCreateView.as_view(), name='mata_pelajaran_list'),
-    path('mata-pelajaran/<int:pk>/', MataPelajaranDetailView.as_view(), name='mata_pelajaran_detail'),
+    # Mata Kuliah
+    path('mata-kuliah/', MataPelajaranListCreateView.as_view(), name='mata_kuliah_list'),
+    path('mata-kuliah/<int:pk>/', MataPelajaranDetailView.as_view(), name='mata_kuliah_detail'),
 
     # Ujian
     path('', UjianListCreateView.as_view(), name='ujian_list'),

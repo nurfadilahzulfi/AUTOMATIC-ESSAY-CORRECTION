@@ -25,16 +25,16 @@ class SoalPublicSerializer(serializers.ModelSerializer):
 
 
 class UjianSerializer(serializers.ModelSerializer):
-    mata_pelajaran_nama = serializers.CharField(source='mata_pelajaran.nama', read_only=True)
-    mata_pelajaran_kode = serializers.CharField(source='mata_pelajaran.kode', read_only=True)
+    mata_kuliah_nama = serializers.CharField(source='mata_pelajaran.nama', read_only=True)
+    mata_kuliah_kode = serializers.CharField(source='mata_pelajaran.kode', read_only=True)
     jumlah_soal = serializers.IntegerField(read_only=True)
     nilai_maksimal = serializers.IntegerField(read_only=True)
     status_display = serializers.CharField(source='get_status_display', read_only=True)
 
     class Meta:
         model = Ujian
-        fields = ['id', 'judul', 'deskripsi', 'mata_pelajaran', 'mata_pelajaran_nama',
-                  'mata_pelajaran_kode', 'durasi_menit', 'kelas_target', 'status',
+        fields = ['id', 'judul', 'deskripsi', 'mata_pelajaran', 'mata_kuliah_nama',
+                  'mata_kuliah_kode', 'durasi_menit', 'kelas_target', 'status',
                   'status_display', 'jumlah_soal', 'nilai_maksimal', 'tanggal_ujian',
                   'created_at', 'updated_at']
         read_only_fields = ['id', 'status', 'jumlah_soal', 'nilai_maksimal', 'created_at', 'updated_at']
@@ -51,11 +51,11 @@ class UjianDetailSerializer(UjianSerializer):
 class UjianMahasiswaSerializer(serializers.ModelSerializer):
     """Ujian untuk mahasiswa — soal tanpa referensi jawaban."""
     soal = SoalPublicSerializer(many=True, read_only=True)
-    mata_pelajaran_nama = serializers.CharField(source='mata_pelajaran.nama', read_only=True)
+    mata_kuliah_nama = serializers.CharField(source='mata_pelajaran.nama', read_only=True)
     jumlah_soal = serializers.IntegerField(read_only=True)
     nilai_maksimal = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Ujian
-        fields = ['id', 'judul', 'deskripsi', 'mata_pelajaran_nama', 'durasi_menit',
+        fields = ['id', 'judul', 'deskripsi', 'mata_kuliah_nama', 'durasi_menit',
                   'jumlah_soal', 'nilai_maksimal', 'tanggal_ujian', 'soal']

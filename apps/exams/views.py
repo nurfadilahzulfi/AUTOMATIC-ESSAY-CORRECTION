@@ -47,7 +47,7 @@ class DashboardDosenView(APIView):
 # ─────────────────────────────────────────────────────────────────────────────
 
 class MataPelajaranListCreateView(APIView):
-    """GET, POST /api/v1/ujian/mata-pelajaran/"""
+    """GET, POST /api/v1/ujian/mata-kuliah/"""
     permission_classes = [IsAuthenticated]
 
     @require_dosen
@@ -68,7 +68,7 @@ class MataPelajaranListCreateView(APIView):
 
 
 class MataPelajaranDetailView(APIView):
-    """DELETE /api/v1/ujian/mata-pelajaran/<pk>/"""
+    """DELETE /api/v1/ujian/mata-kuliah/<pk>/"""
     permission_classes = [IsAuthenticated]
 
     @require_dosen
